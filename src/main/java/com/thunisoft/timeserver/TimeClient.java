@@ -39,12 +39,7 @@ public class TimeClient {
                     });
             //异步链接服务器 同步等待链接成功
             ChannelFuture f = b.connect(host, port).sync();
-            
-
-            byte[] req ="QUERY TIME ORDER".getBytes();
-            ByteBuf firstMessage=Unpooled.buffer(req.length);
-            firstMessage.writeBytes(req);
-            f.channel().writeAndFlush(firstMessage);
+   
             
             //等待链接关闭
             f.channel().closeFuture().sync();
