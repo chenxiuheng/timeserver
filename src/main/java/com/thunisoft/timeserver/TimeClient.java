@@ -10,6 +10,7 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.timeout.IdleStateHandler;
 /**
  * client 存在TCP粘包问题
  * @author xwlaker
@@ -34,7 +35,8 @@ public class TimeClient {
                         @Override
                         protected void initChannel(SocketChannel ch)
                                 throws Exception {
-                            ch.pipeline().addLast(new TimeClientHandler());
+                            ch.pipeline().addLast(new IdleStateHandler(0, 10, 10));
+                            ch.pipeline().addLast(new TimeHandler());
                         }
                     });
             //异步链接服务器 同步等待链接成功

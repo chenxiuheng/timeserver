@@ -50,14 +50,14 @@ public class TimeServer {
     private class ChildChannelHandler extends ChannelInitializer<SocketChannel> {
         @Override
         protected void initChannel(SocketChannel ch) throws Exception {
-            ch.pipeline().addLast(new TimeServerHandler());
+            ch.pipeline().addLast(new TimeHandler());
         }
  
     }
  
     public static void main(String[] args) throws Exception {
         int port = 8000;
-        new TimeServer().bind("172.16.160.149", port);
+        new TimeServer().bind("172.16.160.143", port);
     }
  
 }
