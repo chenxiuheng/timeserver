@@ -10,15 +10,17 @@ import io.netty.buffer.Unpooled;
 public class Frame {
 
     public int seqNo;
-    public Date date = new Timestamp(System.currentTimeMillis());
+    public Date date;
     public int length;
     
     public Frame(int seqNo, int length) {
     	this(seqNo, new Timestamp(System.currentTimeMillis()), length);
     }
     
-    private Frame(int seqNo, Timestamp date, int lenght){
+    private Frame(int seqNo, Timestamp date, int length){
 		this.seqNo = seqNo;
+		this.date = date;
+		this.length = length;
 	}
 
 	public ByteBuf encode() {
