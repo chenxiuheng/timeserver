@@ -8,13 +8,20 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 
 public class Frame {
-    private static final long serialVersionUID = 1L;
 
     public int seqNo;
     public Date date = new Timestamp(System.currentTimeMillis());
     public int length;
     
-    public ByteBuf encode() {
+    public Frame(int seqNo, int length) {
+    	this(seqNo, new Timestamp(System.currentTimeMillis()), length);
+    }
+    
+    private Frame(int seqNo, Timestamp date, int lenght){
+		this.seqNo = seqNo;
+	}
+
+	public ByteBuf encode() {
         
         ByteBuf out = Unpooled.buffer(1440);
         
@@ -36,10 +43,11 @@ public class Frame {
                 return null;
             }
             
-            Frame frame = new Frame();
-            frame.seqNo = in.readInt();
-            frame.date = new Timestamp(in.readLong());
-            frame.length = in.readShort();
+            int seqNo = in.readInt();
+            Timestamp date = new Timestamp(in.readLong());
+            int length = in.readShort();
+
+            Frame frame = new Frame(seqNo, date, length);
             
             int remains = frame.length;
             while(remains > 0) {

@@ -16,7 +16,7 @@ import io.netty.handler.timeout.IdleStateEvent;
 public class TimeHandler extends ByteToMessageDecoder {
     private static final Logger logger = Logger.getLogger(TimeHandler.class.getName());
 
-    private Frame frame = new Frame();
+    private int seqNo;
 
     public TimeHandler() {
     }
@@ -35,8 +35,9 @@ public class TimeHandler extends ByteToMessageDecoder {
         super.channelActive(ctx);
         System.out.println("shoudao yige qingqiu" + ctx.channel().remoteAddress());
         
+        Frame frame = new Frame(seqNo, 1400);
         ctx.writeAndFlush(frame.encode());
-        frame.seqNo ++;
+        seqNo ++;
     }
 
     @Override
@@ -46,8 +47,9 @@ public class TimeHandler extends ByteToMessageDecoder {
         if (evt instanceof IdleStateEvent) {
             IdleStateEvent idle = (IdleStateEvent)evt;
             if (idle.state() == IdleState.WRITER_IDLE) {
-                ctx.writeAndFlush(frame.encode());
-                frame.seqNo ++;
+            	 Frame frame = new Frame(seqNo, 1400);
+                 ctx.writeAndFlush(frame.encode());
+                 seqNo ++;
             }
         }
     }
