@@ -1,6 +1,8 @@
 package com.thunisoft.timeserver;
 
 
+import java.util.concurrent.TimeUnit;
+
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -9,6 +11,7 @@ import io.netty.channel.EventLoopGroup;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.handler.timeout.IdleStateHandler;
  
 /**
  * server 有粘包问题
@@ -50,6 +53,7 @@ public class TimeServer {
     private class ChildChannelHandler extends ChannelInitializer<SocketChannel> {
         @Override
         protected void initChannel(SocketChannel ch) throws Exception {
+            ch.pipeline().addLast(new IdleStateHandler(0, 10, 0, TimeUnit.MILLISECONDS));
             ch.pipeline().addLast(new TimeHandler());
         }
  
@@ -57,7 +61,7 @@ public class TimeServer {
  
     public static void main(String[] args) throws Exception {
         int port = 8000;
-        new TimeServer().bind("172.16.160.143", port);
+        new TimeServer().bind("172.16.160.149", port);
     }
  
 }

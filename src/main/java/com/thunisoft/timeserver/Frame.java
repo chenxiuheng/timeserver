@@ -44,6 +44,7 @@ public class Frame {
             int remains = frame.length;
             while(remains > 0) {
                 in.readByte();
+                remains --;
             }
 
             return frame;
@@ -57,7 +58,7 @@ public class Frame {
         StringBuilder buf = new StringBuilder();
         buf.append(seqNo).append(".");
         buf.append(", length=").append(length);
-        buf.append(", t=").append(new SimpleDateFormat("HH.mm.ss.SSS").format(date));
+        buf.append(", t=").append(new SimpleDateFormat("HH:mm:ss.SSS").format(date));
 
         return buf.toString();
     }

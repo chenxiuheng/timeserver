@@ -1,13 +1,13 @@
 package com.thunisoft.timeserver;
 
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.handler.codec.ByteToMessageDecoder;
-import io.netty.handler.timeout.IdleStateEvent;
-
 import java.util.List;
 import java.util.logging.Logger;
+
+import io.netty.buffer.ByteBuf;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.handler.codec.ByteToMessageDecoder;
+import io.netty.handler.timeout.IdleState;
+import io.netty.handler.timeout.IdleStateEvent;
 
 /**
  * Client 网络IO事件处理
@@ -15,7 +15,6 @@ import java.util.logging.Logger;
  */
 public class TimeHandler extends ByteToMessageDecoder {
     private static final Logger logger = Logger.getLogger(TimeHandler.class.getName());
-    private int seqNo = 0;
 
     private Frame frame = new Frame();
 
@@ -34,7 +33,8 @@ public class TimeHandler extends ByteToMessageDecoder {
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         super.channelActive(ctx);
-
+        System.out.println("shoudao yige qingqiu" + ctx.channel().remoteAddress());
+        
         ctx.writeAndFlush(frame.encode());
         frame.seqNo ++;
     }
@@ -43,9 +43,12 @@ public class TimeHandler extends ByteToMessageDecoder {
     public void userEventTriggered(ChannelHandlerContext ctx, Object evt) throws Exception {
         super.userEventTriggered(ctx, evt);
 
-        if (evt == IdleStateEvent.FIRST_WRITER_IDLE_STATE_EVENT) {
-            ctx.writeAndFlush(frame.encode());
-            frame.seqNo ++;
+        if (evt instanceof IdleStateEvent) {
+            IdleStateEvent idle = (IdleStateEvent)evt;
+            if (idle.state() == IdleState.WRITER_IDLE) {
+                ctx.writeAndFlush(frame.encode());
+                frame.seqNo ++;
+            }
         }
     }
 

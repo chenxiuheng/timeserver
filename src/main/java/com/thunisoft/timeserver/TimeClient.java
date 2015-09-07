@@ -1,8 +1,8 @@
 package com.thunisoft.timeserver;
 
+import java.util.concurrent.TimeUnit;
+
 import io.netty.bootstrap.Bootstrap;
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
@@ -35,12 +35,12 @@ public class TimeClient {
                         @Override
                         protected void initChannel(SocketChannel ch)
                                 throws Exception {
-                            ch.pipeline().addLast(new IdleStateHandler(0, 10, 10));
+                            ch.pipeline().addLast(new IdleStateHandler(0, 10, 0, TimeUnit.MILLISECONDS));
                             ch.pipeline().addLast(new TimeHandler());
                         }
                     });
             //异步链接服务器 同步等待链接成功
-            ChannelFuture f = b.connect(host, port).sync();
+            ChannelFuture f = b.connect(host, port).sync(); 
    
             
             //等待链接关闭
