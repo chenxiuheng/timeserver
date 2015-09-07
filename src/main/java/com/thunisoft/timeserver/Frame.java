@@ -56,7 +56,7 @@ public class Frame {
     @Override
     public String toString() {
         StringBuilder buf = new StringBuilder();
-        buf.append(seqNo).append(".");
+        buf.append("seqNo=").append(seqNo);
         buf.append(", length=").append(length);
         buf.append(", t=").append(new SimpleDateFormat("HH:mm:ss.SSS").format(date));
 
